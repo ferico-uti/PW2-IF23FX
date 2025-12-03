@@ -27,6 +27,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import useSWR from "swr";
 import styles from "../barang.module.css";
+import { useRouter } from "next/navigation";
 
 // buat interface untuk data barang
 interface ModelBarang {
@@ -50,8 +51,12 @@ export default function ViewBarangPage() {
 
   // return <div>Halaman View Barang {`${nama} ${motto}`} </div>;
 
+  // buat variabel router (untuk navigasi form)
+  const router = useRouter();
+
   // definisi SWR
   const { data, error, isLoading, mutate } = useSWR(api_barang, fetcher);
+  
 
   // buat fungsi untuk hapus data
   const deleteData = async (id: number) => {
@@ -144,7 +149,7 @@ export default function ViewBarangPage() {
                   <TableRow key={item.id}>
                     <TableCell className="text-center">
                       {/* tombol ubah */}
-                      <button className={styles.btn_edit}>
+                      <button className={styles.btn_edit} onClick={() => router.push(`/barang/edit/${item.id}`)}>
                         <Pencil size={16} color="black" />
                       </button>
 

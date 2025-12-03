@@ -1,6 +1,5 @@
 "use client";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -10,26 +9,28 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import React, { useState } from "react";
-import styles from "../barang.module.css";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { api_barang, btn_batal, btn_simpan } from "@/lib/strings";
 import {
   filterHarga,
   filterHargaRaw,
   filterKode,
   filterNama,
   formatRibuan,
+  formatRupiah,
 } from "@/lib/scripts";
+import { api_barang, btn_batal, btn_ubah } from "@/lib/strings";
+import { cn } from "@/lib/utils";
 import axios from "axios";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import styles from "../../barang.module.css";
 
 // buat data satuan barang
 const satuan = [
@@ -46,20 +47,20 @@ const satuan = [
     label: "Kilogram",
   },
 ];
-export default function AddBarangPage() {
+
+export default function EditBarangPage() {
   // buat variabel router (untuk navigasi form)
   const router = useRouter();
+
+  // buat variabel params untuk ambil nilai slug
+  const params = useParams();
+  const slug = Number(params.slug);
 
   // buat state untuk combobox satuan
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
-  // buat useState
-  // const [formKode, setFormKode] = useState("")
-  const [formNama, setFormNama] = useState("");
-  // const [formHarga, setFormHarga] = useState(0)
-  // const [formSatuan, setFormSatuan] = useState("")
-
+  // buat state (object) untuk form
   const [form, setForm] = useState<{
     kode: string;
     nama: string;
@@ -74,76 +75,46 @@ export default function AddBarangPage() {
     satuan: "",
   });
 
-  // buat state untuk error
-  // const [errorKode, setErrorKode] = useState(false);
 
-  const [error, setError] = useState<{
-    kode: boolean;
-    nama: boolean;
-    harga: boolean;
-    satuan: boolean;
-  }>({
-    kode: false,
-    nama: false,
-    harga: false,
-    satuan: false,
-  });
-
-  // buat fungsi untuk simpan data
-  const saveData = async () => {
-    const errorStatus = {
-      kode: form.kode === "",
-      nama: formNama === "",
-      harga: form.harga === "",
-      satuan: value === "",
-    };
-
-    // update kondisi error setiap komponen
-    setError(errorStatus);
-
-    // jika terjadi error (ada komponen yang tidak diisi)
-    const hasError = Object.values(errorStatus).includes(true);
-
-    // hentikan proses simpan data
-    if (hasError) {
-      return;
-    }
-
-    // jika tidak error (seluruh komponen sudah diisi)
-    //  simpan data
+  // buat fungsi untuk menampilkan detail data
+  const fetchData = useCallback(async () => {
+    // panggil API detail barang
     try {
-      const response = await axios.post(`${api_barang}`, {
-        kode: form.kode,
-        nama: formNama,
-        harga: form.harga_raw,
-        satuan: value,
+      const response = await axios.get(`${api_barang}/${slug}`, {
+        validateStatus: () => true,
       });
 
-      // jika success == true
-      if (response.data.success) {
-        toast.success(response.data.message);
-
-        // kosongkan isi komponen
-        setFormNama("");
-        setValue("");
+      // jika respon berhasil menampilkan data barang
+      if (response.data.barang) {
         setForm({
-          ...form,
-          kode: "",
-          harga: "",
+          kode: response.data.barang.kode ?? "",
+          nama: response.data.barang.nama ?? "",
+          harga: formatRupiah(Number(response.data.barang.harga)) ?? "",
+          harga_raw: response.data.barang.harga ?? 0,
+          satuan: response.data.barang.satuan ?? "",
         });
+        // isi combobox satuan
+        setValue(response.data.barang.satuan ?? "");
       }
-      // jika success == false
+      // jika respon gagal menampilkan data barang
       else {
-        toast.error(response.data.message);
+        // alihkan ke halaman 404
+        router.replace("/404");
       }
-    } catch {
-      toast.error(`Gagal Kirim Data !`);
+    } catch (err) {
+      console.log("Gagal Menampilkan Data !", err);
     }
-  };
+  }, [slug, router]);
+
+
+  // panggil fungsi fetchData
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <section className={styles.page}>
-      <title>Tambah Data Barang</title>
+      <title>Ubah Data Barang</title>
 
       {/* buat article */}
       <article className="grid sm:grid-cols-2 grid-cols-1 gap-4">
@@ -164,9 +135,7 @@ export default function AddBarangPage() {
             }}
           />
 
-          {error.kode && (
-            <Label className={styles.error}>Kode Barang Harus Diisi !</Label>
-          )}
+
         </section>
 
         {/* area nama */}
@@ -179,16 +148,14 @@ export default function AddBarangPage() {
             id="txt_nama"
             placeholder="Isi Nama Barang"
             maxLength={50}
-            value={formNama}
+            value={form.nama}
             onChange={(value) => {
               const result = filterNama(value.target.value);
-              setFormNama(result);
+              setForm({ ...form, nama: result });
             }}
           />
 
-          {error.nama && (
-            <Label className={styles.error}>Nama Barang Harus Diisi !</Label>
-          )}
+
         </section>
 
         {/* area harga */}
@@ -213,9 +180,7 @@ export default function AddBarangPage() {
             }}
           />
 
-          {error.harga && (
-            <Label className={styles.error}>Harga Barang Harus Diisi !</Label>
-          )}
+
         </section>
 
         {/* area satuan */}
@@ -272,17 +237,13 @@ export default function AddBarangPage() {
             </PopoverContent>
           </Popover>
 
-          {error.satuan && (
-            <Label className={styles.error}>
-              Satuan Barang Harus Dipilih !
-            </Label>
-          )}
+
         </section>
 
         {/* area tombol */}
         <section>
-          <Button className="rounded-full px-8 py-2 mr-1.5" onClick={saveData}>
-            {btn_simpan}
+          <Button className="rounded-full px-8 py-2 mr-1.5">
+            {btn_ubah}
           </Button>
           <Button
             variant="secondary"
@@ -292,5 +253,5 @@ export default function AddBarangPage() {
         </section>
       </article>
     </section>
-  );
+  )
 }
