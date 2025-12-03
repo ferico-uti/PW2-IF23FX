@@ -133,7 +133,7 @@ export default function AddBarangPage() {
         toast.error(response.data.message);
       }
     } catch {
-      toast.error(`Simpan Data Barang Error !`);
+      toast.error(`Gagal Kirim Data !`);
     }
   };
 

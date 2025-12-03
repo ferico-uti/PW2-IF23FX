@@ -40,10 +40,12 @@ export default function RootLayout({
         </header>
         <main>{children}</main>
         {/* buat tag Toaster untuk Sonner */}
-        <Toaster
-          position="top-center"
-          style={{ backgroundColor: "#333333", color: "#ffffff" }}
-        />
+        <Toaster position="top-center" toastOptions={{
+          style: {
+            backgroundColor: "#333333",
+            color: "#FFFFFF"
+          }
+        }} />
         <footer className={styles.footer}>&copy; 2025 - IF 23 FX</footer>
       </body>
     </html>
