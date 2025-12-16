@@ -1,6 +1,5 @@
 "use client";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import ButtonSecondary from "@/components/custom/ButtonSecondary";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -10,16 +9,13 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import React, { useState } from "react";
-import styles from "../barang.module.css";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { api_barang, btn_batal, btn_simpan } from "@/lib/strings";
 import {
   filterHarga,
   filterHargaRaw,
@@ -27,9 +23,14 @@ import {
   filterNama,
   formatRibuan,
 } from "@/lib/scripts";
+import { api_barang, btn_batal, btn_simpan } from "@/lib/strings";
+import { cn } from "@/lib/utils";
 import axios from "axios";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import styles from "../barang.module.css";
+import ButtonPrimary from "@/components/custom/ButtonPrimary";
 
 // buat data satuan barang
 const satuan = [
@@ -47,9 +48,6 @@ const satuan = [
   },
 ];
 export default function AddBarangPage() {
-  // buat variabel router (untuk navigasi form)
-  const router = useRouter();
-
   // buat state untuk combobox satuan
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -281,14 +279,15 @@ export default function AddBarangPage() {
 
         {/* area tombol */}
         <section>
-          <Button className="rounded-full px-8 py-2 mr-1.5" onClick={saveData}>
-            {btn_simpan}
-          </Button>
-          <Button
-            variant="secondary"
-            className="rounded-full px-8 py-2 ml-1.5 bg-gray-300" onClick={() => router.back()}>
-            {btn_batal}
-          </Button>
+          {/* panggil reusable component ButtonPrimary 
+              (components/custom/ButtonPrimary.tsx)
+          */}
+          <ButtonPrimary label={btn_simpan} onClick={saveData} />
+
+          {/* panggil reusable component ButtonSecondary 
+              (components/custom/ButtonSecondary.tsx)
+          */}
+          <ButtonSecondary label={btn_batal} />
         </section>
       </article>
     </section>

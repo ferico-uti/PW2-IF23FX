@@ -31,6 +31,9 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import styles from "../../barang.module.css";
+import { toast } from "sonner";
+import ButtonPrimary from "@/components/custom/ButtonPrimary";
+import ButtonSecondary from "@/components/custom/ButtonSecondary";
 
 // buat data satuan barang
 const satuan = [
@@ -75,6 +78,19 @@ export default function EditBarangPage() {
     satuan: "",
   });
 
+  // buat state untuk error komponen
+  const [error, setError] = useState<{
+    kode: boolean;
+    nama: boolean;
+    harga: boolean;
+    satuan: boolean;
+  }>({
+    kode: false,
+    nama: false,
+    harga: false,
+    satuan: false,
+  });
+
 
   // buat fungsi untuk menampilkan detail data
   const fetchData = useCallback(async () => {
@@ -112,6 +128,49 @@ export default function EditBarangPage() {
     fetchData();
   }, [fetchData]);
 
+  // buat fungsi untuk ubah data
+  const editData = async () => {
+    const errorStatus = {
+      kode: form.kode === "",
+      nama: form.nama === "",
+      harga: form.harga === "",
+      satuan: value === "",
+    };
+
+    // update kondisi error setiap komponen
+    setError(errorStatus);
+
+    // jika terjadi error (ada komponen yang tidak diisi)
+    const hasError = Object.values(errorStatus).includes(true);
+
+    // hentikan proses ubah data
+    if (hasError) {
+      return;
+    }
+
+    // jika tidak error (seluruh komponen sudah diisi)
+    //  ubah data
+    try {
+      const response = await axios.put(`${api_barang}/${slug}`, {
+        kode: form.kode,
+        nama: form.nama,
+        harga: form.harga_raw,
+        satuan: value,
+      });
+
+      // jika success == true
+      if (response.data.success) {
+        toast.success(response.data.message);
+      }
+      // jika success == false
+      else {
+        toast.error(response.data.message);
+      }
+    } catch {
+      toast.error(`Gagal Kirim Data !`);
+    }
+  };
+
   return (
     <section className={styles.page}>
       <title>Ubah Data Barang</title>
@@ -135,7 +194,9 @@ export default function EditBarangPage() {
             }}
           />
 
-
+          {error.kode && (
+            <Label className={styles.error}>Kode Barang Harus Diisi !</Label>
+          )}
         </section>
 
         {/* area nama */}
@@ -155,7 +216,9 @@ export default function EditBarangPage() {
             }}
           />
 
-
+          {error.nama && (
+            <Label className={styles.error}>Nama Barang Harus Diisi !</Label>
+          )}
         </section>
 
         {/* area harga */}
@@ -180,7 +243,9 @@ export default function EditBarangPage() {
             }}
           />
 
-
+          {error.harga && (
+            <Label className={styles.error}>Harga Barang Harus Diisi !</Label>
+          )}
         </section>
 
         {/* area satuan */}
@@ -237,19 +302,24 @@ export default function EditBarangPage() {
             </PopoverContent>
           </Popover>
 
-
+          {error.satuan && (
+            <Label className={styles.error}>
+              Satuan Barang Harus Dipilih !
+            </Label>
+          )}
         </section>
 
         {/* area tombol */}
         <section>
-          <Button className="rounded-full px-8 py-2 mr-1.5">
-            {btn_ubah}
-          </Button>
-          <Button
-            variant="secondary"
-            className="rounded-full px-8 py-2 ml-1.5 bg-gray-300" onClick={() => router.back()}>
-            {btn_batal}
-          </Button>
+          {/* panggil reusable component ButtonPrimary 
+              (components/custom/ButtonPrimary.tsx)
+          */}
+          <ButtonPrimary label={btn_ubah} onClick={editData} />
+
+          {/* panggil reusable component ButtonSecondary 
+              (components/custom/ButtonSecondary.tsx)
+          */}
+          <ButtonSecondary label={btn_batal} />
         </section>
       </article>
     </section>
