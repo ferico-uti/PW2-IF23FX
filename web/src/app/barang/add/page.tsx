@@ -1,5 +1,8 @@
 "use client";
+import ButtonPrimary from "@/components/custom/ButtonPrimary";
 import ButtonSecondary from "@/components/custom/ButtonSecondary";
+import InputText from "@/components/custom/InputText";
+import LabelInput from "@/components/custom/LabelInput";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -9,7 +12,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
@@ -30,7 +32,6 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import styles from "../barang.module.css";
-import ButtonPrimary from "@/components/custom/ButtonPrimary";
 
 // buat data satuan barang
 const satuan = [
@@ -147,10 +148,14 @@ export default function AddBarangPage() {
       <article className="grid sm:grid-cols-2 grid-cols-1 gap-4">
         {/* area kode */}
         <section>
-          <Label htmlFor="txt_kode" className={styles.label}>
-            Kode Barang
-          </Label>
-          <Input
+          {/* panggil reusable component ButtonPrimary 
+              (components/custom/LabelInput.tsx)
+          */}
+          <LabelInput htmlFor="txt_kode" required>Kode Barang</LabelInput>
+          {/* panggil reusable component ButtonPrimary 
+              (components/custom/InputText.tsx)
+          */}
+          <InputText
             type="text"
             id="txt_kode"
             placeholder="Isi Kode Barang"
@@ -169,10 +174,14 @@ export default function AddBarangPage() {
 
         {/* area nama */}
         <section>
-          <Label htmlFor="txt_nama" className={styles.label}>
-            Nama Barang
-          </Label>
-          <Input
+          {/* panggil reusable component ButtonPrimary 
+              (components/custom/LabelInput.tsx)
+          */}
+          <LabelInput htmlFor="txt_nama" required>Nama Barang</LabelInput>
+          {/* panggil reusable component ButtonPrimary 
+              (components/custom/InputText.tsx)
+          */}
+          <InputText
             type="text"
             id="txt_nama"
             placeholder="Isi Nama Barang"
@@ -191,10 +200,14 @@ export default function AddBarangPage() {
 
         {/* area harga */}
         <section>
-          <Label htmlFor="txt_harga" className={styles.label}>
-            Harga Barang
-          </Label>
-          <Input
+          {/* panggil reusable component ButtonPrimary 
+              (components/custom/LabelInput.tsx)
+          */}
+          <LabelInput htmlFor="txt_harga" required>Harga Barang</LabelInput>
+          {/* panggil reusable component ButtonPrimary 
+              (components/custom/InputText.tsx)
+          */}
+          <InputText
             type="text"
             id="txt_harga"
             placeholder="Isi Harga Barang"
@@ -218,9 +231,10 @@ export default function AddBarangPage() {
 
         {/* area satuan */}
         <section>
-          <Label htmlFor="cbo_satuan" className={styles.label}>
-            Satuan Barang
-          </Label>
+          {/* panggil reusable component ButtonPrimary 
+              (components/custom/LabelInput.tsx)
+          */}
+          <LabelInput htmlFor="cbo_satuan" required>Satuan Barang</LabelInput>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
