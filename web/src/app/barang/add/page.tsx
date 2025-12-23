@@ -148,11 +148,11 @@ export default function AddBarangPage() {
       <article className="grid sm:grid-cols-2 grid-cols-1 gap-4">
         {/* area kode */}
         <section>
-          {/* panggil reusable component ButtonPrimary 
+          {/* panggil reusable component LabelInput 
               (components/custom/LabelInput.tsx)
           */}
           <LabelInput htmlFor="txt_kode" required>Kode Barang</LabelInput>
-          {/* panggil reusable component ButtonPrimary 
+          {/* panggil reusable component InputText 
               (components/custom/InputText.tsx)
           */}
           <InputText
@@ -174,11 +174,11 @@ export default function AddBarangPage() {
 
         {/* area nama */}
         <section>
-          {/* panggil reusable component ButtonPrimary 
+          {/* panggil reusable component LabelInput 
               (components/custom/LabelInput.tsx)
           */}
           <LabelInput htmlFor="txt_nama" required>Nama Barang</LabelInput>
-          {/* panggil reusable component ButtonPrimary 
+          {/* panggil reusable component InputText 
               (components/custom/InputText.tsx)
           */}
           <InputText
@@ -200,11 +200,11 @@ export default function AddBarangPage() {
 
         {/* area harga */}
         <section>
-          {/* panggil reusable component ButtonPrimary 
+          {/* panggil reusable component LabelInput 
               (components/custom/LabelInput.tsx)
           */}
           <LabelInput htmlFor="txt_harga" required>Harga Barang</LabelInput>
-          {/* panggil reusable component ButtonPrimary 
+          {/* panggil reusable component InputText 
               (components/custom/InputText.tsx)
           */}
           <InputText
@@ -231,7 +231,7 @@ export default function AddBarangPage() {
 
         {/* area satuan */}
         <section>
-          {/* panggil reusable component ButtonPrimary 
+          {/* panggil reusable component LabelInput 
               (components/custom/LabelInput.tsx)
           */}
           <LabelInput htmlFor="cbo_satuan" required>Satuan Barang</LabelInput>
@@ -293,7 +293,7 @@ export default function AddBarangPage() {
 
         {/* area tombol */}
         <section>
-          {/* panggil reusable component ButtonPrimary 
+          {/* panggil reusable component LabelInput 
               (components/custom/ButtonPrimary.tsx)
           */}
           <ButtonPrimary label={btn_simpan} onClick={saveData} />

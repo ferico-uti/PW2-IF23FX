@@ -20,7 +20,7 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { formatRupiah } from "@/lib/scripts";
-import { api_barang } from "@/lib/strings";
+import { api_barang, api_laporan_barang } from "@/lib/strings";
 import axios from "axios";
 import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -95,8 +95,15 @@ export default function ViewBarangPage() {
       <nav className="mb-4 flex sm:justify-end md:justify-start justify-center">
         <Link
           href="/barang/add"
-          className="sm:bg-cyan-700 bg-rose-700 px-8 py-2 text-white rounded-full">
+          className="sm:bg-cyan-700 bg-rose-700 px-8 py-2 text-white rounded-full mr-1.5">
           Tambah Data
+        </Link>
+
+        <Link
+          href={`${api_laporan_barang}`}
+          target="_blank"
+          className="sm:bg-rose-700 bg-cyan-700 px-8 py-2 text-white rounded-full ml-1.5">
+          Ekspor PDF
         </Link>
       </nav>
 

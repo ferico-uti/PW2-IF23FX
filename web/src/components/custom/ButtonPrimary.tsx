@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from '../ui/button';
 
-// buat interface untuk button secondary
+// buat interface untuk button primary
 interface ButtonPrimaryProps {
     // xyz? = optional ditambahkan saat diakses    
     label?: string;
