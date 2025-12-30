@@ -29,9 +29,11 @@ import { api_barang, btn_batal, btn_simpan } from "@/lib/strings";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import styles from "../barang.module.css";
+import { useAuth } from "@/store/useAuth";
+import { useRouter } from "next/navigation";
 
 // buat data satuan barang
 const satuan = [
@@ -140,9 +142,33 @@ export default function AddBarangPage() {
     }
   };
 
+  // buat variabel router (untuk navigasi form)
+  const router = useRouter();
+
+  // buat variabel dari useAuth
+  // sumber : store/useAuth.ts
+  const { isLogin, username, logout, hasHydrated } = useAuth();
+
+  // proses pengecekan login
+  useEffect(() => {
+    // tunggu pembacaan localStorage ("auth")
+    if (!hasHydrated) return;
+
+    // jika belum login alihkan ke halaman login
+    if (!isLogin) {
+      router.replace("/login");
+    }
+  }, [hasHydrated, isLogin, router]);
+
+  if (!hasHydrated) return;
+  if (!isLogin) return;
+
   return (
     <section className={styles.page}>
       <title>Tambah Data Barang</title>
+
+      {/* info user */}
+      <section className="sm:text-right text-center">Selamat Datang, {username} <Button onClick={logout} className="rounded-full bg-rose-800 cursor-pointer ml-2.5 ">Logout</Button></section>
 
       {/* buat article */}
       <article className="grid sm:grid-cols-2 grid-cols-1 gap-4">

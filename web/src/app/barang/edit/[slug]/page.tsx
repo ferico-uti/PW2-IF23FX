@@ -35,6 +35,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import styles from "../../barang.module.css";
+import { useAuth } from "@/store/useAuth";
 
 // buat data satuan barang
 const satuan = [
@@ -172,9 +173,32 @@ export default function EditBarangPage() {
     }
   };
 
+
+  // buat variabel dari useAuth
+  // sumber : store/useAuth.ts
+  const { isLogin, username, logout, hasHydrated } = useAuth();
+
+  // proses pengecekan login
+  useEffect(() => {
+    // tunggu pembacaan localStorage ("auth")
+    if (!hasHydrated) return;
+
+    // jika belum login alihkan ke halaman login
+    if (!isLogin) {
+      router.replace("/login");
+    }
+  }, [hasHydrated, isLogin, router]);
+
+  if (!hasHydrated) return;
+  if (!isLogin) return;
+
+
   return (
     <section className={styles.page}>
       <title>Ubah Data Barang</title>
+
+      {/* info user */}
+      <section className="sm:text-right text-center">Selamat Datang, {username} <Button onClick={logout} className="rounded-full bg-rose-800 cursor-pointer ml-2.5 ">Logout</Button></section>
 
       {/* buat article */}
       <article className="grid sm:grid-cols-2 grid-cols-1 gap-4">

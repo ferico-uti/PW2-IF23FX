@@ -6,3 +6,4 @@
 - 16/12/2025 - Reusable Component (Button).
 - 17/12/2025 - Reusable Component (Label & Input).
 - 24/12/2025 - PDF Export.
+- 30/12/2025 - State Management (Zustand) untuk Login, Logout dan Proteksi Halaman.

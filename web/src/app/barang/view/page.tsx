@@ -28,6 +28,9 @@ import { toast } from "sonner";
 import useSWR from "swr";
 import styles from "../barang.module.css";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/store/useAuth";
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 // buat interface untuk data barang
 interface ModelBarang {
@@ -56,7 +59,7 @@ export default function ViewBarangPage() {
 
   // definisi SWR
   const { data, error, isLoading, mutate } = useSWR(api_barang, fetcher);
-  
+
 
   // buat fungsi untuk hapus data
   const deleteData = async (id: number) => {
@@ -88,9 +91,31 @@ export default function ViewBarangPage() {
   //   return <div>Mohon Tunggu...</div>
   // }
 
+  // buat variabel dari useAuth
+  // sumber : store/useAuth.ts
+  const { isLogin, username, logout, hasHydrated } = useAuth();
+
+  // proses pengecekan login
+  useEffect(() => {
+    // tunggu pembacaan localStorage ("auth")
+    if (!hasHydrated) return;
+
+    // jika belum login alihkan ke halaman login
+    if (!isLogin) {
+      router.replace("/login");
+    }
+  }, [hasHydrated, isLogin, router]);
+
+  if (!hasHydrated) return;
+  if (!isLogin) return;
+
   return (
     <section className={styles.page}>
       <title>Tampil Data Barang</title>
+
+      {/* info user */}
+      <section className="sm:text-right text-center sm:mb-2.5 mb-5">Selamat Datang, {username} <Button onClick={logout} className="rounded-full bg-rose-800 cursor-pointer ml-2.5 ">Logout</Button></section>
+
       {/* tombol / navigasi */}
       <nav className="mb-4 flex sm:justify-end md:justify-start justify-center">
         <Link
